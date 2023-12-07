@@ -101,7 +101,7 @@ def dump_db():
             print(result)
             return render_template("datos.html", result=result)
 
-    except Exception as e:wha
+      except Exception as e:
         print(e)
         print(traceback.format_exc())
         # or
@@ -109,6 +109,7 @@ def dump_db():
         print("except")
         return "Error"
     finally:
-        con.close()      
+        con.close()        
+
 
         
