@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Page</title>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        .table {
+            display: none;
+        }
+        #table1 {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello</h1>
+    <div class="button-container">
+        <button onclick="showTable('table1')">Pendientes de Revisión</button>
+        <button onclick="showTable('table2')">Provisional</button>
+        <button onclick="showTable('table3')">Definitiva</button>
+    </div>
+    <table id="table1" class="table">
+        <!-- Content of table 1 -->
+    </table>
+    <table id="table2" class="table">
+        <!-- Content of table 2 -->
+    </table>
+    <table id="table3" class="table">
+        <!-- Content of table 3 -->
+    </table>
+    <script>
+        function showTable(tableId) {
+            var tables = document.getElementsByClassName('table');
+            for (var i = 0; i < tables.length; i++) {
+                tables[i].style.display = 'none';
+            }
+            document.getElementById(tableId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
