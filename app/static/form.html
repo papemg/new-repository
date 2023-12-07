@@ -85,10 +85,32 @@
   <label class="control-label" for="confirmEmail">Confirmar Email</label>  
   <div>
   <input id="confirmEmail" name="confirmEmail" type="text" placeholder="" class="form-control input-md" required="">
-  <span id="emailWarning" class="help-block" style="display: none;">Los emails no coinciden.</span>  
-  </div>
-</div>
+  <span id="emailWarning" class="help-block" style="display: none;color: red;">❌</span>  
+  <span id="emailSuccess" class="help-block" style="display: none; color: green;">✅</span>
 
+</div>
+</div>
+<script>
+document.getElementById('email').addEventListener('input', checkEmails);
+document.getElementById('confirmEmail').addEventListener('input', checkEmails);
+
+function checkEmails() {
+  var email = document.getElementById('email').value;
+  var confirmEmail = document.getElementById('confirmEmail').value;
+  var emailWarning = document.getElementById('emailWarning');
+  var emailSuccess = document.getElementById('emailSuccess');
+  
+  if (email !== confirmEmail || email === '' && confirmEmail === '') {
+    emailWarning.style.display = email !== '' && confirmEmail !== '' ? 'inline' : 'none';
+    emailSuccess.style.display = 'none';
+  } else {
+    emailWarning.style.display = 'none';
+    emailSuccess.style.display = 'inline';
+  }
+}
+  </script>
+
+<!--script vieja
 <script>
 document.getElementById('email').addEventListener('input', checkEmails);
 document.getElementById('confirmEmail').addEventListener('input', checkEmails);
@@ -105,31 +127,72 @@ function checkEmails() {
   }
 }
 </script>
+-->
+
 
 <!--Género-->
-
 <label for="gender">Género</label>
 <select id="gender" name="gender">
   <option value="Hombre">Hombre</option>
   <option value="Mujer">Mujer</option>
 </select>
-<div class="form-group">
-  <label class="col-md-4 control-label" for="gender">Género</label>
-  <div class="col-md-4">
-    <div class="radio">
-      <label for="gender-0">
-        <input type="radio" name="gender" id="gender-0" value="Hombre" checked="checked">
-        Hombre
-      </label>
-    </div>
-    <div class="radio">
-      <label for="gender-1">
-        <input type="radio" name="gender" id="gender-1" value="Mujer">
-        Mujer
-      </label>
-    </div>
+
+<!--Circunstancias excepcionales-->
+<div class="form-group" style="margin-top: 10px;">
+<label>Circunstancias excepcionales:</label>
+  <div id="circunstancias">
+  <div class="option">
+    <input type="checkbox" id="opcion1" name="circunstancias" value="opcion1" onchange="showInput(this)">
+    <label for="opcion1">Víctima del terrorismo</label>
+    <input type="file" id="file1" style="display: none;" onchange="showTick(this)">
+    <span id="tick1" style="display: none;">&#10004;</span>
+  </div>
+  <div class="option">
+    <input type="checkbox" id="opcion2" name="circunstancias" value="opcion2" onchange="showInput(this)">
+    <label for="opcion2">Familia Numerosa</label>
+    <input type="file" id="file2" style="display: none;" onchange="showTick(this)">
+    <span id="tick2" style="display: none;">&#10004;</span>
+  </div>
+  <div class="option">
+    <input type="checkbox" id="opcion3" name="circunstancias" value="opcion3" onchange="showInput(this)">
+    <label for="opcion3">Víctima de Violencia de Género</label>
+    <input type="file" id="file3" style="display: none;" onchange="showTick(this)">
+    <span id="tick3" style="display: none;">&#10004;</span>
+  </div>
+  <div class="option">
+    <input type="checkbox" id="opcion4" name="circunstancias" value="opcion4" onchange="showInput(this)">
+    <label for="opcion4">Estudiante con discapacidad</label>
+    <input type="file" id="file4" style="display: none;" onchange="showTick(this)">
+    <span id="tick4" style="display: none;">&#10004;</span>
+  </div>
+  <div class="option">
+    <input type="checkbox" id="opcion5" name="circunstancias" value="opcion5" onchange="showInput(this)">
+    <label for="opcion5">Supuestos del artículo 12.2 31/2022</label>
+    <input type="file" id="file5" style="display: none;" onchange="showTick(this)">
+    <span id="tick5" style="display: none;">&#10004;</span>
   </div>
 </div>
+</div>
+
+<script>
+function showInput(checkbox) {
+  var fileInput = document.getElementById('file' + checkbox.id.charAt(checkbox.id.length - 1));
+  if (checkbox.checked) {
+    fileInput.style.display = 'inline';
+  } else {
+    fileInput.style.display = 'none';
+  }
+}
+
+function showTick(fileInput) {
+  if (fileInput.files.length > 0) {
+    var tick = document.getElementById('tick' + fileInput.id.charAt(fileInput.id.length - 1));
+    tick.style.display = 'inline';
+  }
+}
+</script>
+
+  <!--Aqui empieza la caja de policiales-->
           </fieldset>
 
 

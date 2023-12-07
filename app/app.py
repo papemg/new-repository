@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import send_from_directory, request, render_template
+from flask import Flask, send_from_directory, request, render_template
 import sqlite3
 from datetime import datetime
 
@@ -7,6 +6,7 @@ import traceback
 import sys
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
+
 
 
 
@@ -48,16 +48,17 @@ def intro_form():
                 return "DEMASIADO MAYOR"
         
     except:
-        return "La fecha de nacimiento no se ha recibido con el formato esperado. Consulte con la administración\n"
+        return "La fecha de nacimiento no se ha recibido con el formato esperado. Consulte con la administración"
 
     # categoria == oficial
     if categoria != "oficial":
         return "Necesita ser oficial para poder acceder"
 
     # Elegir Género
-    if gender not in ['Hombre', 'Mujer']
+    if gender not in ['Hombre', 'Mujer']:
         error = 'Invalid gender'
         return "Tiene que seleccionar un género"
+
     # equivalencia == si
 
     # grado  == no
@@ -101,7 +102,7 @@ def dump_db():
             print(result)
             return render_template("datos.html", result=result)
 
-      except Exception as e:
+    except Exception as e:
         print(e)
         print(traceback.format_exc())
         # or
@@ -110,6 +111,8 @@ def dump_db():
         return "Error"
     finally:
         con.close()        
+
+        
 
 
         
