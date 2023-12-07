@@ -39,6 +39,8 @@ def intro_form():
         limit = datetime.now()
         n = datetime.strptime(nacimiento, "%Y-%m-%d")
         edad = limit.year - n.year
+        #añadir aqui el motivo concreto por el que no se puede matricular y citar la norma
+        #cambiar la nueva página de error por un pop-up
         if edad > 60:
             return "DEMASIADO MAYOR"
         if edad == 60:
@@ -76,7 +78,7 @@ def intro_form():
     try:
         with sqlite3.connect("/var/admision/admision.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia) )
+            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,gender,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia) )
             con.commit()
     except Exception as e:
         print(e)
@@ -110,9 +112,4 @@ def dump_db():
         print("except")
         return "Error"
     finally:
-        con.close()        
-
-        
-
-
-        
+        con.close()
