@@ -1,0 +1,62 @@
+[
+    {
+        "username": "user",
+        "password": "pass",
+        "type": "user"
+    },
+    {
+        "username": "admin",
+        "password": "pass",
+        "type": "admin"
+    },
+    {
+            "username": "70000",
+            "password": "70000",
+            "type": "user"
+    },
+    {
+            "username": "70001",
+            "password": "70001",
+            "type": "user"
+        },
+        {
+            "username": "70002",
+            "password": "70002",
+            "type": "user"
+        },
+        {
+            "username": "70003",
+            "password": "70003",
+            "type": "user"
+        },
+        {
+            "username": "70004",
+            "password": "70004",
+            "type": "user"
+        },
+        {
+            "username": "70005",
+            "password": "70005",
+            "type": "user"
+        },
+        {
+            "username": "70006",
+            "password": "70006",
+            "type": "user"
+        },
+        {
+            "username": "70007",
+            "password": "70007",
+            "type": "user"
+        },
+        {
+            "username": "70008",
+            "password": "70008",
+            "type": "user"
+        },
+        {
+            "username": "70009",
+            "password": "70009",
+            "type": "user"
+        }
+    ]

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Introducir datos</title>
+    </head>
+    <body>
+        <form action="intro" method = "POST">
+            <fieldset>
+            <legend>Datos personales</legend>
+            <!--Nombre-->
+            <div class="form-group" style="display: inline-block;">
+              <label class="control-label" for="nombre">Nombre</label>  
+              <div  >
+              <input id="nombre" name="nombre" type="text" placeholder="" class="form-control input-md" required="">
+              </div>
+            </div>
+            
+            <!--Apellidos-->
+            <div class="form-group" style="display: inline-block;">
+              <label class="control-label" for="apellidos">Apellidos</label>  
+              <div  >
+              <input id="apellidos" name="apellidos" type="text" placeholder="" class="form-control input-md" required="" style="width: 150%;">
+                
+              </div>
+            </div>
+            
+            <!--DNI-->
+            <div class="form-group" style="margin-bottom: 10px;">
+              <label class="control-label" for="dni">DNI</label>  
+              <div  >
+              <input id="dni" name="dni" type="text" placeholder="" class="form-control input-md" required="" pattern="^[0-9]{8}[A-Z]$">
+              <span class="help-block">Formato: 12345678X</span>  
+              </div>
+            </div>
+            <!--Fecha de nacimiento-->
+            <div class="form-group">
+              <label for="start">Fecha de nacimiento:</label>           
+              <input type="date" id="nacimiento" name="nacimiento" min="1950-01-01"  class="form-control input-md" required="">
+              </div>
+
+        
+            
+            
+
+<!--Numero de telefono-->
+<!--<div class="form-group">
+    <label class="col-md-4 control-label" for="telefono">Telefono</label>  
+    <div class="col-md-4">
+    <input id="telefono" name="telefono" type="text" placeholder="" class="form-control input-md" required="">
+      
+    </div>
+  </div> -->
+
+  <!-- Telefono -->
+  <div class="form-group">
+    <label class="control-label" for="telefono">Telefono</label>  
+    <div>
+    <input id="telefono" name="telefono" type="text" placeholder="" class="form-control input-md" required="" pattern="^[0-9]*$">
+    <span id="telefonoWarning" class="help-block" style="display: none;">Solo números permitidos.</span>  
+    </div>
+  </div>
+
+  <script>
+  document.getElementById('telefono').addEventListener('input', function (e) {
+    var telefonoWarning = document.getElementById('telefonoWarning');
+    if (!/^[0-9]*$/.test(e.target.value)) {
+      telefonoWarning.style.display = 'block';
+    } else {
+      telefonoWarning.style.display = 'none';
+    }
+  });
+  </script>
+
+  
+<!--Dirección de correo-->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="email">Email</label>  
+    <div class="col-md-4">
+    <input id="email" name="email" type="text" placeholder="" class="form-control input-md" required="">
+      
+    </div>
+  </div>
+<!-- Confirm Email -->
+<div class="form-group" style="margin-bottom: 10px;">
+  <label class="control-label" for="confirmEmail">Confirmar Email</label>  
+  <div>
+  <input id="confirmEmail" name="confirmEmail" type="text" placeholder="" class="form-control input-md" required="">
+  <span id="emailWarning" class="help-block" style="display: none;">Los emails no coinciden.</span>  
+  </div>
+</div>
+
+<script>
+document.getElementById('email').addEventListener('input', checkEmails);
+document.getElementById('confirmEmail').addEventListener('input', checkEmails);
+
+function checkEmails() {
+  var email = document.getElementById('email').value;
+  var confirmEmail = document.getElementById('confirmEmail').value;
+  var emailWarning = document.getElementById('emailWarning');
+  
+  if (email !== confirmEmail) {
+    emailWarning.style.display = 'block';
+  } else {
+    emailWarning.style.display = 'none';
+  }
+}
+</script>
+
+<!--Género-->
+
+<label for="gender">Género</label>
+<select id="gender" name="gender">
+  <option value="Hombre">Hombre</option>
+  <option value="Mujer">Mujer</option>
+</select>
+<div class="form-group">
+  <label class="col-md-4 control-label" for="gender">Género</label>
+  <div class="col-md-4">
+    <div class="radio">
+      <label for="gender-0">
+        <input type="radio" name="gender" id="gender-0" value="Hombre" checked="checked">
+        Hombre
+      </label>
+    </div>
+    <div class="radio">
+      <label for="gender-1">
+        <input type="radio" name="gender" id="gender-1" value="Mujer">
+        Mujer
+      </label>
+    </div>
+  </div>
+</div>
+          </fieldset>
+
+
+
+          <fieldset>
+            <legend>Datos Policiales</legend>
+
+            <!--Carnet Profesional-->
+            <div class="form-group">
+              <label class="control-label" for="cp">Carnet Profesional</label>  
+              <div  >
+              <input id="cp" name="cp" type="text" placeholder="" class="form-control input-md" required="">
+                
+              </div>
+            </div>
+            
+            <!--Estado de servicio -->
+            <div class="form-group">
+            <label class="col-md-4 control-label" for="servicio_activo">Servicio activo</label>
+            <div class="col-md-4">
+            <select id="servicio_activo" name="servicio_activo" class="form-control">
+            <option value="activo">Activo</option>
+            <option value="servicios especiales">Servicios especiales</option>
+            <option value="excedencia">Excedencia</option>
+            <option value="otro">Otra</option>
+            </select>
+            </div>
+          </div>
+  
+  <!-- Grado universitario -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="grado">Tienes un Grado</label>
+    <div class="col-md-4">
+    <div class="radio">
+      <label for="grado-0">
+        <input type="radio" name="grado" id="grado-0" value="si" checked="checked">
+        Si
+      </label>
+      </div>
+    <div class="radio">
+      <label for="grado-1">
+        <input type="radio" name="grado" id="grado-1" value="no">
+        No
+      </label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Equivalencia con FP Superior -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="equivalencia">Tiene la equivalencia de FP Superior</label>
+    <div class="col-md-4">
+    <div class="radio">
+      <label for="equivalencia-0">
+        <input type="radio" name="equivalencia" id="equivalencia-0" value="si" checked="checked">
+        Si
+      </label>
+      </div>
+    <div class="radio">
+      <label for="equivalencia-1">
+        <input type="radio" name="equivalencia" id="equivalencia-1" value="no">
+        No
+      </label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Subir PDF con titulo o Equivalencia --> 
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="titulo">Titulo o equivalencia</label>
+    <div class="col-md-4">
+      <input id="titulo" name="titulo" class="input-file" type="file">
+    </div>
+  </div>
+  
+  <!-- Categoría profesional -->
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="categoria">Categoria profesional</label>
+    <div class="col-md-4">
+    <div class="radio">
+      <label for="categoria-0">
+        <input type="radio" name="categoria" id="categoria-0" value="policia" checked="checked">
+        Policia
+      </label>
+      </div>
+    <div class="radio">
+      <label for="categoria-1">
+        <input type="radio" name="categoria" id="categoria-1" value="oficial">
+        Oficial
+      </label>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Boton para subir fotografía  
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="fotografia">Fotografia</label>
+    <div class="col-md-4">
+      <input id="fotografia" name="fotografia" class="input-file" type="file">
+    </div>
+  </div> -->
+  
+  <!-- Boton para subir fotografía --> 
+  <div class="form-group">
+    <label class="col-md-4 control-label" for="fotografia">Fotografia</label>
+    <div class="col-md-4">
+      <input id="fotografia" name="fotografia" class="input-file" type="file" style="display: none;">
+      <button id="uploadButton" class="btn btn-default">Seleccione Archivo</button>
+    </div>
+  </div>
+
+  <script>
+  document.getElementById('uploadButton').addEventListener('click', function() {
+    document.getElementById('fotografia').click();
+  });
+  </script>
+
+  
+          </fieldset> 
+
+
+
+        
+          <!--Boton para enviar formulario-->
+          <input type="submit" value="Enviar">
+    </form>
+    <script>
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].oninvalid = function(e) {
+        e.target.setCustomValidity("");
+        if (!e.target.validity.valid) {
+          e.target.setCustomValidity("Por favor, rellene este campo.");
+        }
+      };
+    }
+    </script>
+    </body>
+</html>

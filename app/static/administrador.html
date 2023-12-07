@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <div class="logo-container"><img src="/logo.png" alt="Login Image" width="50%"style="margin-top: 30px"></div>
+<head>
+    <title>My Page</title>
+    <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+        .table {
+            display: none;
+        }
+        .button-container button {
+            margin: 0 10px; /* Adjust this value to change the space between buttons */
+        }
+        #table1 {
+            display: block;
+        }
+        .logo-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 15%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Administración</h1>
+    <div class="button-container">
+        <button onclick="showTable('table1')">Pendientes de Revisión</button>
+        <button onclick="showTable('table2')">Provisional</button>
+        <button onclick="showTable('table3')">Definitiva</button>
+    </div>
+    <table id="table1" class="table">
+        <thead>
+            <tr>
+                <th>nombre</th>
+                <!-- Add more headers as needed -->
+            </tr>
+        </thead>
+        <tbody id="table1-body">
+            <!-- Rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+    <!-- Add more tables as needed -->
+    <script>
+         // Fetch data and insert rows into the table
+         fetch('/api/data') // Replace with your API endpoint
+            .then(response => response.json())
+            .then(data => {
+                var tbody = document.getElementById('table1-body');
+                data.forEach(row => {
+                    var tr = document.createElement('tr');
+                    row.forEach(item => {
+                        var td = document.createElement('td');
+                        td.textContent = item;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+            });
+    </script>
+    
+    
+</body>
+</html>

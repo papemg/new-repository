@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Consulta de datos</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                padding: .2em;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+            <thead>
+              <tr>
+                <th>nombre</th>
+                <th>apellidos</th>
+                <th>DNI</th>
+                <th>CP</th>
+                <th>fecha_nacimiento</th>
+                <th>telefono</th>
+                <th>email</th>
+                <th>gender</th>
+                <th>escalafon</th>
+                <th>situacion_servicio</th>
+                <th>grado</th>
+                <th>categoria_profesional</th>
+                <th>equivalencia_titulo</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for row in result %}
+                <tr>
+                    {% for item in row %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
