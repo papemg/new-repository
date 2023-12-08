@@ -28,7 +28,7 @@ def intro_form():
     servicio_activo = request.form["servicio_activo"]
     grado = request.form["grado"]
     equivalencia = request.form["equivalencia"]
-
+    
     print(request.form)
     print(servicio_activo)
     categoria = request.form["categoria"]
@@ -76,16 +76,14 @@ def intro_form():
 
     # ESCRIBIRLO EN LA BD
     try:
-        with sqlite3.connect("/var/admision/admision.db") as con:
+        with sqlite3.connect("/Users/carlosvillarino/Desktop/Rufo/new-repository/data/admision.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,gender,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia) )
+            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo,gender) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia,gender) )
             con.commit()
     except Exception as e:
         print(e)
         con.rollback()
         return "Error del servidor, pruebe más tarde."
-    finally:
-        con.close()
 
     # REPORTAR OK
     return "Datos insertados correctamente"
@@ -94,7 +92,7 @@ def intro_form():
 @app.route("/consulta")
 def dump_db():
     try:
-        with sqlite3.connect("/var/admision/admision.db") as con:
+        with sqlite3.connect("/Users/carlosvillarino/Desktop/Rufo/new-repository/data/admision.db") as con:
             cur = con.cursor()
             
             cur.execute("SELECT * FROM admision_2023 ORDER BY escalafon ASC LIMIT 0,1 ;")
@@ -102,14 +100,13 @@ def dump_db():
 
 
             print(result)
-            return render_template("datos.html", result=result)
-
+            var123=render_template("datos.html", result=result)
+            return var123
+           
     except Exception as e:
         print(e)
         print(traceback.format_exc())
         # or
         print(sys.exc_info()[2])
         print("except")
-        return "Error"
-    finally:
-        con.close()
+        return "Error1"
