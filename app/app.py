@@ -26,7 +26,7 @@ with open('static/users.json', 'r') as file:
     users_data = json.load(file)
 
 # Create instances of the User class
-users = [User(user['id'], user['username'], user['password']) for user in users_data]
+users = [User(user['id'], user['username'], user['password'],user['type']) for user in users_data]
 
 @app.route("/")
 def entry_home():
@@ -155,7 +155,7 @@ def intro_form():
 
 
 
-@app.route("/consulta")
+@app.route("/consulta", endpoint='consulta')
 def dump_db():
     if 'username' in session:
         try:
@@ -203,7 +203,10 @@ def login():
             # Log in the user
             login_user(user)
             session['username'] = username
-            return redirect(url_for('formulario'))
+            if(user.type=='user'):
+                return redirect(url_for('formulario'))
+            else:
+                return redirect(url_for('consulta'))
         else:
             flash('Usuario o contraseña incorrectos', 'error')
             return render_template('login.html')
