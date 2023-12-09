@@ -134,7 +134,7 @@ def intro_form():
     
     # ESCRIBIRLO EN LA BD
     try:
-        with sqlite3.connect("/Users/carlosvillarino/Desktop/Rufo/new-repository/data/admision.db") as con:
+        with sqlite3.connect("/var/admision/admision.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo,gender) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia,gender) )
             con.commit()
@@ -159,7 +159,7 @@ def intro_form():
 def dump_db():
     if 'username' in session:
         try:
-            with sqlite3.connect("/Users/carlosvillarino/Desktop/Rufo/new-repository/data/admision.db") as con:
+            with sqlite3.connect("/var/admision/admision.db") as con:
                 cur = con.cursor()
                 
                 cur.execute("SELECT * FROM admision_2023 ORDER BY escalafon DESC;")
