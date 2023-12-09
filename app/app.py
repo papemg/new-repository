@@ -1,21 +1,53 @@
-from flask import Flask, send_from_directory, request, render_template
+import os
+from flask import Flask, flash, redirect, request, render_template, session, url_for
 import sqlite3
 from datetime import datetime
 
 import traceback
 import sys
+from flask_login import LoginManager, login_user
+
+import json
+from user import User
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
+app.config['SECRET_KEY'] = 'your_secret_key'
+UPLOAD_FOLDER = 'static/titulos'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER2 = 'static/titulos'
+app.config['UPLOAD_FOLDER2'] = UPLOAD_FOLDER2
 
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
+# Load user data from users.json
+with open('static/users.json', 'r') as file:
+    users_data = json.load(file)
+
+# Create instances of the User class
+users = [User(user['id'], user['username'], user['password']) for user in users_data]
 
 @app.route("/")
+def entry_home():
+    return render_template('home.html')
+
+@app.route("/formulario", endpoint='formulario')
 def entry_form():
-    return send_from_directory(app.static_folder, "form.html")
+    if 'username' in session:
+        # User is logged in, you can render the page or redirect as needed
+        return render_template('form.html')
+    else:
+        # User is not logged in, redirect to the login page
+        return redirect(url_for('login'))
+        
+    
 
 @app.route("/intro", methods=['POST'])
 def intro_form():
+    #definimos la variable que dará redirección
+    errorForm = []
+    
     # VALIDAR LA INFO RECIBIDA
     nombre = request.form["nombre"]
     apellidos = request.form["apellidos"]
@@ -28,9 +60,10 @@ def intro_form():
     servicio_activo = request.form["servicio_activo"]
     grado = request.form["grado"]
     equivalencia = request.form["equivalencia"]
-
+    
     print(request.form)
     print(servicio_activo)
+    print(request.files)
     categoria = request.form["categoria"]
 
     # TODO validar variables
@@ -39,77 +72,149 @@ def intro_form():
         limit = datetime.now()
         n = datetime.strptime(nacimiento, "%Y-%m-%d")
         edad = limit.year - n.year
-        #añadir aqui el motivo concreto por el que no se puede matricular y citar la norma
-        #cambiar la nueva página de error por un pop-up
         if edad > 60:
-            return "DEMASIADO MAYOR"
+            errorForm.append("DEMASIADO MAYOR")
         if edad == 60:
             if limit.month < n.month:
-                return "DEMASIADO MAYOR"
+                errorForm.append("DEMASIADO MAYOR")
             elif limit.month == n.month and limit.day >= n.day:
-                return "DEMASIADO MAYOR"
+                errorForm.append("DEMASIADO MAYOR")
         
     except:
-        return "La fecha de nacimiento no se ha recibido con el formato esperado. Consulte con la administración"
+        errorForm.append("La fecha de nacimiento no se ha recibido con el formato esperado. Consulte con la administración")
 
     # categoria == oficial
     if categoria != "oficial":
-        return "Necesita ser oficial para poder acceder"
+        errorForm.append("Necesita ser oficial para poder acceder")
 
     # Elegir Género
     if gender not in ['Hombre', 'Mujer']:
         error = 'Invalid gender'
-        return "Tiene que seleccionar un género"
+        errorForm.append("Tiene que seleccionar un género")
 
-    # equivalencia == si
-
+    # TODO: equivalencia == si
+    
     # grado  == no
     if grado != "no":
-        return "Si ya tiene un grado no puede matricularse."
+        errorForm.append("Si ya tiene un grado no puede matricularse.")
 
     # servicio activo != otro
     if servicio_activo == "otro":
-        return "Su situación administrativa no es válida"
+       errorForm.append("Su situación administrativa no es válida")
 
-    # titulo = request.form["titulo"]
+    # titulo
+    if 'titulo' not in request.files:
+        errorForm.append('Se ha producido un problema con la subida de ficheros, contacte con el administrador. Disculpe las molestias.')
+
+    titulo = request.files['titulo']
+
+    if titulo.filename == '':
+        errorForm.append('No se ha adjuntado documento de título')
+    
+    
+    if not os.path.exists(app.config['UPLOAD_FOLDER']):
+        os.makedirs(app.config['UPLOAD_FOLDER'])
+
+    titulo.save(os.path.join(app.config['UPLOAD_FOLDER'], cp+"_"+titulo.filename))
+
     # fotografia
+    if 'fotografia' not in request.files:
+        errorForm.append('Se ha producido un problema con la subida de ficheros, contacte con el administrador. Disculpe las molestias.')
 
+    foto = request.files['fotografia']
+
+    if foto.filename == '':
+        errorForm.append('No se ha adjuntado fotografía')
+    
+    
+    if not os.path.exists(app.config['UPLOAD_FOLDER2']):
+        os.makedirs(app.config['UPLOAD_FOLDER2'])
+
+    foto.save(os.path.join(app.config['UPLOAD_FOLDER2'], cp+"_"+foto.filename))
+    
     # ESCRIBIRLO EN LA BD
     try:
         with sqlite3.connect("/var/admision/admision.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,gender,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia) )
+            cur.execute("INSERT INTO admision_2023 (nombre,apellidos,DNI,CP,fecha_nacimiento,telefono,email,escalafon,situacion_servicio,grado,categoria_profesional,equivalencia_titulo,gender) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nombre,apellidos,dni,cp,nacimiento,telefono,email,10,servicio_activo,grado,categoria,equivalencia,gender) )
             con.commit()
     except Exception as e:
         print(e)
         con.rollback()
-        return "Error del servidor, pruebe más tarde."
-    finally:
-        con.close()
-
+        errorForm.append("Error del servidor, pruebe más tarde.")
+    
+    
     # REPORTAR OK
-    return "Datos insertados correctamente"
+    if not errorForm:
+        return render_template("formExito.html")
+    else:
+        for item in errorForm:
+            flash(item)
+        return render_template("form.html")
+
+
 
 
 @app.route("/consulta")
 def dump_db():
-    try:
-        with sqlite3.connect("/var/admision/admision.db") as con:
-            cur = con.cursor()
+    if 'username' in session:
+        try:
+            with sqlite3.connect("/var/admision/admision.db") as con:
+                cur = con.cursor()
+                
+                cur.execute("SELECT * FROM admision_2023 ORDER BY escalafon DESC;")
+                result = cur.fetchall()
+
+
+                print(result)
+                return render_template("datos.html", result=result)
             
-            cur.execute("SELECT * FROM admision_2023 ORDER BY escalafon ASC LIMIT 0,1 ;")
-            result = cur.fetchall()
+        except Exception as e:
+            print(e)
+            print(traceback.format_exc())
+            # or
+            print(sys.exc_info()[2])
+            print("except")
+            return "Error1"
+    else:
+        return redirect(url_for('login'))
+    
+def get_user_by_id(user_id):
+    for user in users:
+        if user.id == user_id:
+            return user
+    return None
+    
+@login_manager.user_loader
+def load_user(user_id):
+    return get_user_by_id(int(user_id))
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    session.clear()
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-            print(result)
-            return render_template("datos.html", result=result)
+        # Find the user in the list
+        user = next((u for u in users if u.username == username), None)
 
-    except Exception as e:
-        print(e)
-        print(traceback.format_exc())
-        # or
-        print(sys.exc_info()[2])
-        print("except")
-        return "Error"
-    finally:
-        con.close()
+        if user and user.check_password(password):
+            # Log in the user
+            login_user(user)
+            session['username'] = username
+            return redirect(url_for('formulario'))
+        else:
+            flash('Usuario o contraseña incorrectos', 'error')
+            return render_template('login.html')
+    else:
+        return render_template('login.html')
+    
+@app.route('/logout')
+def logout():
+    return render_template('logout.html')
+
+@app.route('/confirmLogout')
+def confirmLogout():
+    session.pop('username', None)
+    return render_template('home.html')
